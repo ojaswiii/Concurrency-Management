@@ -11,8 +11,8 @@ dotenv.config({path:'./config.env'});
 
 const DB=process.env.DATABASE;
 mongoose.connect(DB, { useNewUrlParser:true, useUnifiedTopology:true })
-  .then(() => console.log('DB connection successful'))
-  .catch((err) => console.error(err));
+    .then(() => console.log('DB connection successful'))
+    .catch((err) => console.error(err));
 
 app.use('/posts', postRoutes);
 

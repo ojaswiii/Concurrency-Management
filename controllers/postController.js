@@ -1,14 +1,23 @@
 const Post=require('../models/postModel')
 
 exports.getPost=async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
   
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  async function test() {
     // Check if post is already present in the database
     const existingPost = await Post.findOne({ id: id });
     if (existingPost) {
       console.log(`Post ${id} found in database, no need for api call`);
       return res.json(existingPost);
     }
+    await sleep(3000);
+  }
+  
+  test();
   
     // If not present, get it from the api
     console.log(`Getting post ${id} from the given api`);
