@@ -1,6 +1,31 @@
+const redis=require('redis');
 const Post=require('../models/postModel')
 
+const client = redis.createClient({
+  legacyMode: true,
+  PORT: 6379
+})
+client.connect().catch(console.error);
+
+// Middleware to check if the data is present in cache or not
+exports.cache=async(req,res,next)=>{
+  const { id } = req.params;
+
+  client.get(id, (err,data)=>{
+    console.log("in cache");
+    if(err) throw err;
+
+    if(data !== null) {
+      console.log("from cache...")
+      res.json(JSON.parse(data));
+    } else {
+      next();
+    }
+  })
+}
+
 exports.getPost=async (req, res) => {
+  console.log("in controller")
   const { id } = req.params;
   
   function sleep(ms) {
@@ -14,7 +39,7 @@ exports.getPost=async (req, res) => {
       console.log(`Post ${id} found in database, no need for api call`);
       return res.json(existingPost);
     }
-    await sleep(3000);
+    await sleep(1000);
   }
   
   test();
@@ -30,7 +55,10 @@ exports.getPost=async (req, res) => {
       title: postData.title,
       body: postData.body,
     });
-  
+
+    // Save the post in cache
+    client.setEx(id,3600,JSON.stringify(postData));
+
     // Save the new Post in database
     await post.save();
     console.log(`Post ${id} saved to database`);

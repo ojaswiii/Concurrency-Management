@@ -1,7 +1,10 @@
 const mongoose=require('mongoose');
 
 const postSchema = new mongoose.Schema({
-    id: Number,
+    id: {
+        type: Number,
+        unique: true
+    },
     userId: Number,
     title: String,
     body: String,
