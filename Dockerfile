@@ -1,6 +1,7 @@
-FROM node:alpine
+FROM node:18-alpine
 WORKDIR /app
-COPY . /app
+COPY package*.json /app
 RUN npm i
+COPY . /app
 EXPOSE 3000
 CMD node index.js
