@@ -5,6 +5,6 @@ const postController=require('./../controllers/postController');
 
 router
 .route('/:id')
-.get(postController.getPost)
+.get(postController.cache,postController.getPost)
 
 module.exports= router;
